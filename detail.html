@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<!--
+  detail.html – AquaPure Product Detail Page
+  ===========================================
+  URL pattern: detail.html?id=1  (id = 1 | 2 | 3)
+
+  Structure:
+    • .navbar          – shared fixed navigation
+    • .detail-hero     – two-column: gradient visual | product info
+    • .detail-section  – mineral composition table
+    • <footer>         – shared footer
+
+  detail.js reads ?id= and populates every dynamic element on load.
+  Language switching re-runs renderDetail() via the 'langchange' event.
+-->
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AquaPure | 产品详情</title>
+  <!-- Google Fonts: Noto Sans SC + JP for CJK support -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════════
+       FIXED NAVIGATION BAR  (identical to index.html)
+       ════════════════════════════════════════════════════════════ -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+
+      <a href="index.html" class="nav-logo" aria-label="AquaPure – home">
+        <svg viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+             aria-hidden="true">
+          <path d="M12 1 C12 1 22 13 22 19 C22 25 17.5 29 12 29 C6.5 29 2 25 2 19 C2 13 12 1 12 1 Z"
+                fill="#0071e3" opacity="0.9"/>
+          <ellipse cx="8.5" cy="15" rx="2" ry="5"
+                   fill="rgba(255,255,255,0.35)" transform="rotate(-20 8.5 15)"/>
+        </svg>
+        <span data-i18n="brand">AquaPure</span>
+      </a>
+
+      <ul class="nav-links" role="list">
+        <li><a href="index.html#products" data-i18n="nav.products">产品</a></li>
+        <li><a href="index.html#about"    data-i18n="nav.about">关于我们</a></li>
+      </ul>
+
+      <div class="lang-switcher" role="group" aria-label="Language selector">
+        <button class="lang-btn" data-lang="zh" aria-label="Chinese">中</button>
+        <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+        <button class="lang-btn" data-lang="ja" aria-label="Japanese">日</button>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════
+       PRODUCT DETAIL HERO
+       Two-column layout: left = gradient visual, right = info
+       All data-i18n attributes with {id} placeholders are resolved
+       by detail.js before applyTranslations() is called.
+       ════════════════════════════════════════════════════════════ -->
+  <main>
+    <section class="detail-hero">
+      <div class="detail-grid">
+
+        <!-- ── LEFT: Product visual (gradient + bottle SVG) ──── -->
+        <!--
+          id="detail-visual" is targeted by detail.js which injects
+          the correct gradient background and bottle SVG.
+        -->
+        <div id="detail-visual" class="detail-visual fade-in"
+             aria-label="Product illustration">
+          <!-- Populated by detail.js -->
+        </div>
+
+        <!-- ── RIGHT: Product information ─────────────────────── -->
+        <div class="detail-info fade-in">
+
+          <!-- Back button -->
+          <a href="index.html" class="detail-back"
+             id="detail-back-btn" data-i18n="detail.back">← 返回</a>
+
+          <!-- Product type badge -->
+          <p class="detail-type" id="detail-type"
+             data-i18n="product.{id}.type">天然矿泉水</p>
+
+          <!-- Product name heading -->
+          <h1 id="detail-name" data-i18n="product.{id}.name">
+            产品名称
+          </h1>
+
+          <!-- Full description paragraph -->
+          <p class="detail-full-desc" id="detail-full-desc"
+             data-i18n="detail.fullDesc.{id}">
+            产品详细介绍将在此显示。
+          </p>
+
+          <!-- Pricing -->
+          <p class="detail-price-label" data-i18n="detail.price"
+             aria-label="Price label">价格</p>
+          <p class="detail-price" id="detail-price"
+             data-i18n="product.{id}.price">—</p>
+
+          <!-- CTA Buttons -->
+          <div class="detail-actions">
+            <button id="btn-add-cart" class="btn-primary"
+                    data-i18n="detail.addCart">加入购物车</button>
+            <button id="btn-buy-now"  class="btn-secondary"
+                    data-i18n="detail.buyNow">立即购买</button>
+          </div>
+
+          <!-- Meta pills: TDS / pH / Source -->
+          <div class="detail-meta">
+
+            <div class="meta-pill">
+              <p class="meta-label" data-i18n="detail.tds">总溶解固体</p>
+              <p class="meta-value" id="detail-tds-value">—</p>
+            </div>
+
+            <div class="meta-pill">
+              <p class="meta-label" data-i18n="detail.ph">pH 值</p>
+              <p class="meta-value" id="detail-ph-value">—</p>
+            </div>
+
+            <div class="meta-pill">
+              <p class="meta-label" data-i18n="detail.source.label">水源地</p>
+              <p class="meta-value" id="detail-source-value"
+                 data-i18n="detail.source.{id}" style="font-size:13px;line-height:1.4">
+                —
+              </p>
+            </div>
+
+          </div>
+        </div><!-- /.detail-info -->
+
+      </div><!-- /.detail-grid -->
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════
+         MINERAL COMPOSITION TABLE
+         ════════════════════════════════════════════════════════ -->
+    <section class="detail-section fade-in"
+             aria-labelledby="composition-heading">
+
+      <h2 id="composition-heading" data-i18n="detail.composition">
+        矿物成分分析
+      </h2>
+
+      <table class="mineral-table" role="table">
+        <thead>
+          <tr>
+            <!-- Table column headers – translated by i18n -->
+            <th scope="col" data-i18n="detail.composition">成分</th>
+            <th scope="col">含量</th>
+          </tr>
+        </thead>
+        <!--
+          tbody rows are generated by detail.js using buildMineralRows().
+          Each row: <tr><td data-i18n="detail.calcium">…</td><td>…mg/L</td></tr>
+        -->
+        <tbody id="mineral-tbody">
+          <!-- Populated by detail.js -->
+        </tbody>
+      </table>
+
+    </section>
+  </main>
+
+  <!-- ════════════════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════════════════ -->
+  <footer>
+    <p data-i18n="footer.copyright">© 2024 AquaPure. 保留所有权利。</p>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SCRIPTS (load order matters)
+         1. i18n.js  – defines t(), setLanguage(), applyTranslations()
+         2. stars.js – canvas star-field and cursor tracking
+         3. detail.js – populates product data, wires buttons
+       ════════════════════════════════════════════════════════════ -->
+  <script src="js/i18n.js"></script>
+  <script src="js/stars.js"></script>
+  <script src="js/detail.js"></script>
+
+</body>
+</html>
