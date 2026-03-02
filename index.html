@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<!--
+  index.html – AquaPure Homepage
+  ================================
+  Structure:
+    • <head>       – meta, viewport, title, stylesheet link
+    • .navbar      – fixed top navigation with logo, links, language switcher
+    • .hero        – full-viewport hero with animated water drop
+    • .products-section – 3-column product grid (built dynamically by main.js)
+    • .about-section    – brand story + three feature pills
+    • <footer>     – copyright line
+    • <scripts>    – i18n.js → stars.js → main.js (order matters)
+
+  Double-click this file to open directly in any modern browser.
+  All assets are local; no network required.
+-->
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <!-- Responsive viewport – essential for mobile scaling -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Browser-tab title; overwritten by i18n.js after load -->
+  <title>AquaPure | 纯净矿泉水</title>
+  <!-- Google Fonts: Noto Sans SC + JP ensure CJK glyphs render on any OS.
+       Falls back gracefully to system fonts when offline. -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;500;600;700&family=Noto+Sans+JP:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Shared stylesheet -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ════════════════════════════════════════════════════════════
+       FIXED NAVIGATION BAR
+       ════════════════════════════════════════════════════════════ -->
+  <header>
+    <nav class="navbar" role="navigation" aria-label="Main navigation">
+
+      <!-- Brand logo (SVG water-drop + wordmark) -->
+      <a href="index.html" class="nav-logo" aria-label="AquaPure – home">
+        <!-- Inline SVG so we can colour it with CSS -->
+        <svg viewBox="0 0 24 30" fill="none" xmlns="http://www.w3.org/2000/svg"
+             aria-hidden="true">
+          <path d="M12 1 C12 1 22 13 22 19 C22 25 17.5 29 12 29 C6.5 29 2 25 2 19 C2 13 12 1 12 1 Z"
+                fill="#0071e3" opacity="0.9"/>
+          <ellipse cx="8.5" cy="15" rx="2" ry="5"
+                   fill="rgba(255,255,255,0.35)" transform="rotate(-20 8.5 15)"/>
+        </svg>
+        <span data-i18n="brand">AquaPure</span>
+      </a>
+
+      <!-- Centre navigation links (hidden on mobile via CSS) -->
+      <ul class="nav-links" role="list">
+        <li><a href="#products" data-i18n="nav.products">产品</a></li>
+        <li><a href="#about"    data-i18n="nav.about">关于我们</a></li>
+      </ul>
+
+      <!-- Language switcher; data-lang read by i18n.js + main.js -->
+      <div class="lang-switcher" role="group" aria-label="Language selector">
+        <button class="lang-btn" data-lang="zh" aria-label="Chinese">中</button>
+        <button class="lang-btn" data-lang="en" aria-label="English">EN</button>
+        <button class="lang-btn" data-lang="ja" aria-label="Japanese">日</button>
+      </div>
+
+    </nav>
+  </header>
+
+  <!-- ════════════════════════════════════════════════════════════
+       HERO – Full-viewport welcome section
+       ════════════════════════════════════════════════════════════ -->
+  <main>
+    <section class="hero" aria-labelledby="hero-heading">
+
+      <!-- Animated water-drop illustration -->
+      <svg class="hero-drop" viewBox="0 0 120 150" fill="none"
+           xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <defs>
+          <linearGradient id="heroGrad" x1="25%" y1="0%" x2="75%" y2="100%">
+            <stop offset="0%"   stop-color="#a0c4ff" stop-opacity="0.95"/>
+            <stop offset="100%" stop-color="#0071e3" stop-opacity="1"/>
+          </linearGradient>
+          <filter id="heroGlow">
+            <feGaussianBlur stdDeviation="5" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        <!-- Drop body -->
+        <path d="M60 4 C60 4 108 64 108 94 C108 122 87 146 60 146
+                 C33 146 12 122 12 94 C12 64 60 4 60 4 Z"
+              fill="url(#heroGrad)" filter="url(#heroGlow)" opacity="0.92"/>
+        <!-- Highlight streak -->
+        <ellipse cx="40" cy="72" rx="8" ry="20"
+                 fill="rgba(255,255,255,0.28)" transform="rotate(-25 40 72)"/>
+        <!-- Small inner bubbles -->
+        <circle cx="75" cy="100" r="6" fill="rgba(255,255,255,0.18)"/>
+        <circle cx="52" cy="118" r="4" fill="rgba(255,255,255,0.13)"/>
+        <circle cx="82" cy="82"  r="3" fill="rgba(255,255,255,0.20)"/>
+      </svg>
+
+      <!-- Text content -->
+      <p class="hero-eyebrow" data-i18n="hero.eyebrow">来自大自然</p>
+      <h1 id="hero-heading" data-i18n="hero.title">每一滴都是纯净的奇迹</h1>
+      <p data-i18n="hero.subtitle">
+        精选高山泉源，富含天然矿物质，为您带来最纯粹的饮水体验
+      </p>
+      <!-- Smooth-scroll to products -->
+      <a href="#products" class="btn-primary" data-i18n="hero.cta">探索产品</a>
+
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════
+         PRODUCTS GRID
+         Filled dynamically by main.js using PRODUCTS array + i18n
+         ════════════════════════════════════════════════════════ -->
+    <section id="products" class="products-section"
+             aria-labelledby="products-heading">
+      <p  class="section-eyebrow fade-in" data-i18n="products.title">我们的产品</p>
+      <h2 class="section-title   fade-in" id="products-heading"
+          data-i18n="products.title">我们的产品</h2>
+      <p  class="section-subtitle fade-in" data-i18n="products.subtitle">
+        三款精心调配，适合不同生活场景
+      </p>
+
+      <!-- main.js injects .product-card elements here -->
+      <div id="product-grid" role="list" aria-label="Product list"></div>
+    </section>
+
+    <!-- ════════════════════════════════════════════════════════
+         ABOUT / BRAND STORY
+         ════════════════════════════════════════════════════════ -->
+    <section id="about" class="about-section" aria-labelledby="about-heading">
+      <div class="about-inner">
+        <h2 id="about-heading" class="fade-in"
+            data-i18n="about.title">关于 AquaPure</h2>
+        <p class="fade-in" data-i18n="about.text">
+          我们相信每个人都应该享有最纯净的水。
+        </p>
+      </div>
+
+      <!-- Three feature highlights -->
+      <div class="features-grid">
+
+        <article class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">💧</div>
+          <h3 class="feature-title" data-i18n="feature.pure.title">极致纯净</h3>
+          <p  class="feature-text"  data-i18n="feature.pure.text"></p>
+        </article>
+
+        <article class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">🌿</div>
+          <h3 class="feature-title" data-i18n="feature.natural.title">天然矿物</h3>
+          <p  class="feature-text"  data-i18n="feature.natural.text"></p>
+        </article>
+
+        <article class="feature-card fade-in">
+          <div class="feature-icon" aria-hidden="true">♻️</div>
+          <h3 class="feature-title" data-i18n="feature.eco.title">绿色环保</h3>
+          <p  class="feature-text"  data-i18n="feature.eco.text"></p>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- ════════════════════════════════════════════════════════════
+       FOOTER
+       ════════════════════════════════════════════════════════════ -->
+  <footer>
+    <p data-i18n="footer.copyright">© 2024 AquaPure. 保留所有权利。</p>
+  </footer>
+
+  <!-- ════════════════════════════════════════════════════════════
+       SCRIPTS  (load order is important)
+         1. i18n.js  – must come first; defines t() & setLanguage()
+         2. stars.js – canvas star-field & cursor tracking
+         3. main.js  – uses t() for card rendering
+       ════════════════════════════════════════════════════════════ -->
+  <script src="js/i18n.js"></script>
+  <script src="js/stars.js"></script>
+  <script src="js/main.js"></script>
+
+</body>
+</html>

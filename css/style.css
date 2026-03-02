@@ -1,0 +1,734 @@
+/*
+ * style.css – AquaPure website styles
+ *
+ * Design language: Apple-inspired dark theme
+ *   Background:  #000000  (pure black)
+ *   Surface:     #111111 / #1c1c1e
+ *   Text:        #f5f5f7 (primary) / #a1a1a6 (secondary) / #6e6e73 (tertiary)
+ *   Accent blue: #0071e3
+ *   Font:        system-ui / SF Pro / Helvetica Neue
+ *
+ * Sections:
+ *   1. CSS custom properties
+ *   2. Reset & base
+ *   3. Navbar
+ *   4. Hero
+ *   5. Products grid & cards
+ *   6. About / Features
+ *   7. Footer
+ *   8. Detail page
+ *   9. Scroll-reveal animations
+ *  10. Responsive breakpoints
+ */
+
+/* ═══════════════════════════════════════════════════════════════
+   1. CSS CUSTOM PROPERTIES
+   ═══════════════════════════════════════════════════════════════ */
+:root {
+  --bg:          #000000;
+  --surface:     #111111;
+  --surface-2:   #1c1c1e;
+  --border:      rgba(255, 255, 255, 0.08);
+  --text-1:      #f5f5f7;
+  --text-2:      #a1a1a6;
+  --text-3:      #6e6e73;
+  --blue:        #0071e3;
+  --blue-hover:  #0077ed;
+  --radius:      18px;
+  --radius-sm:   10px;
+  --nav-height:  44px;
+  --max-width:   1200px;
+  --transition:  0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   2. RESET & BASE
+   ═══════════════════════════════════════════════════════════════ */
+*, *::before, *::after {
+  margin:     0;
+  padding:    0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size:       16px;
+}
+
+body {
+  /* CJK-inclusive font stack — covers macOS/iOS (PingFang, Hiragino),
+     Windows (Microsoft YaHei, Yu Gothic), Linux (WenQuanYi, Noto),
+     with Google Fonts Noto Sans SC/JP as optional web-font fallback */
+  font-family: 'Noto Sans SC', 'Noto Sans JP',
+               -apple-system, BlinkMacSystemFont,
+               'PingFang SC', 'PingFang TC',
+               'Hiragino Sans GB', 'Hiragino Sans',
+               'Microsoft YaHei', 'Microsoft JhengHei',
+               'Yu Gothic', 'Meiryo',
+               'WenQuanYi Micro Hei',
+               'SF Pro Display', 'Helvetica Neue', 'Segoe UI', sans-serif;
+  background:  var(--bg);
+  color:       var(--text-1);
+  overflow-x:  hidden;
+  /* Ensure the canvas behind everything doesn't create extra height */
+  position:    relative;
+}
+
+img, svg { display: block; }
+a        { color: inherit; text-decoration: none; }
+button   { font: inherit; cursor: pointer; border: none; background: none; }
+
+/* ═══════════════════════════════════════════════════════════════
+   3. NAVBAR
+   ═══════════════════════════════════════════════════════════════ */
+.navbar {
+  position:       fixed;
+  top:            0;
+  left:           0;
+  right:          0;
+  z-index:        900;
+  height:         var(--nav-height);
+  display:        flex;
+  align-items:    center;
+  justify-content: space-between;
+  padding:        0 24px;
+  background:     rgba(0, 0, 0, 0.72);
+  backdrop-filter: saturate(180%) blur(20px);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  border-bottom:  1px solid var(--border);
+  transition:     background var(--transition);
+}
+
+/* Slightly more opaque once the user scrolls */
+.navbar.scrolled {
+  background: rgba(0, 0, 0, 0.88);
+}
+
+/* Brand / logo */
+.nav-logo {
+  display:     flex;
+  align-items: center;
+  gap:         8px;
+  font-size:   18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color:       var(--text-1);
+  white-space: nowrap;
+}
+
+.nav-logo svg {
+  width:  24px;
+  height: 24px;
+}
+
+/* Centre navigation links */
+.nav-links {
+  display:     flex;
+  gap:         28px;
+  align-items: center;
+}
+
+.nav-links a {
+  font-size:   14px;
+  color:       rgba(245, 245, 247, 0.8);
+  transition:  color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--text-1);
+}
+
+/* Language switcher */
+.lang-switcher {
+  display:     flex;
+  gap:         4px;
+  align-items: center;
+}
+
+.lang-btn {
+  padding:       3px 10px;
+  border:        1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 6px;
+  font-size:     12px;
+  font-weight:   500;
+  color:         rgba(245, 245, 247, 0.6);
+  transition:    all 0.2s;
+}
+
+.lang-btn:hover,
+.lang-btn.active {
+  background:   rgba(255, 255, 255, 0.1);
+  border-color: rgba(255, 255, 255, 0.4);
+  color:        var(--text-1);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   4. HERO SECTION
+   ═══════════════════════════════════════════════════════════════ */
+.hero {
+  position:        relative;
+  z-index:         1;
+  min-height:      100vh;
+  display:         flex;
+  flex-direction:  column;
+  align-items:     center;
+  justify-content: center;
+  text-align:      center;
+  padding:         calc(var(--nav-height) + 80px) 24px 80px;
+  /* Subtle radial glow to hint at depth */
+  background:      radial-gradient(ellipse 80% 60% at 50% 40%,
+                     rgba(0, 60, 130, 0.35) 0%,
+                     transparent 70%);
+}
+
+/* Eyebrow / overline label */
+.hero-eyebrow {
+  font-size:      14px;
+  font-weight:    500;
+  color:          var(--blue);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom:  16px;
+}
+
+/* Large display headline */
+.hero h1 {
+  font-size:      clamp(36px, 7vw, 88px);
+  font-weight:    700;
+  line-height:    1.06;
+  letter-spacing: -0.025em;
+  /* Gradient text – crisp white to blue */
+  background:    linear-gradient(160deg, #ffffff 30%, #74b9ff 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  max-width:      900px;
+  margin-bottom:  20px;
+}
+
+.hero p {
+  font-size:    clamp(16px, 2vw, 20px);
+  color:        var(--text-3);
+  max-width:    580px;
+  line-height:  1.6;
+  margin-bottom: 44px;
+}
+
+/* Animated water-drop SVG */
+.hero-drop {
+  width:         min(160px, 30vw);
+  margin-bottom: 44px;
+  animation:     float 7s ease-in-out infinite;
+  filter:        drop-shadow(0 0 28px rgba(0, 113, 227, 0.45));
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0)    rotate(-2deg); }
+  50%       { transform: translateY(-18px) rotate(2deg); }
+}
+
+/* ─── Shared button styles ──────────────────────────────────── */
+.btn-primary {
+  display:       inline-block;
+  background:    var(--blue);
+  color:         #fff;
+  padding:       13px 26px;
+  border-radius: 980px;       /* pill */
+  font-size:     16px;
+  font-weight:   500;
+  transition:    background var(--transition), transform 0.15s;
+  border:        2px solid transparent;
+}
+
+.btn-primary:hover  { background: var(--blue-hover); }
+.btn-primary:active { transform: scale(0.97); }
+
+.btn-secondary {
+  display:       inline-block;
+  background:    transparent;
+  color:         var(--blue);
+  padding:       12px 24px;
+  border-radius: 980px;
+  font-size:     16px;
+  font-weight:   500;
+  border:        2px solid var(--blue);
+  transition:    all var(--transition);
+}
+
+.btn-secondary:hover {
+  background: var(--blue);
+  color:      #fff;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   5. PRODUCTS GRID & CARDS
+   ═══════════════════════════════════════════════════════════════ */
+.products-section {
+  position:   relative;
+  z-index:    1;
+  padding:    80px 24px 100px;
+  max-width:  var(--max-width);
+  margin:     0 auto;
+}
+
+.section-eyebrow {
+  font-size:      13px;
+  font-weight:    500;
+  color:          var(--blue);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  text-align:     center;
+  margin-bottom:  12px;
+}
+
+.section-title {
+  font-size:      clamp(26px, 4.5vw, 48px);
+  font-weight:    700;
+  letter-spacing: -0.015em;
+  text-align:     center;
+  margin-bottom:  8px;
+}
+
+.section-subtitle {
+  font-size:     17px;
+  color:         var(--text-3);
+  text-align:    center;
+  margin-bottom: 56px;
+}
+
+/* 3-column grid; collapses gracefully on smaller screens */
+#product-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap:                   20px;
+}
+
+/* Individual product card */
+.product-card {
+  position:    relative;
+  border-radius: var(--radius);
+  overflow:    hidden;
+  background:  var(--surface-2);
+  cursor:      pointer;
+  border:      1px solid var(--border);
+  transition:  transform var(--transition), box-shadow var(--transition);
+  outline:     none;
+}
+
+.product-card:hover {
+  transform:  translateY(-10px) scale(1.012);
+  box-shadow: 0 24px 60px rgba(0, 113, 227, 0.18),
+              0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.product-card:focus-visible {
+  box-shadow: 0 0 0 3px var(--blue);
+}
+
+/* Top visual area (gradient + bottle SVG) */
+.card-visual {
+  height:          300px;
+  display:         flex;
+  align-items:     center;
+  justify-content: center;
+  overflow:        hidden;
+  position:        relative;
+}
+
+.card-bottle {
+  width:      80px;
+  filter:     drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
+  transition: transform var(--transition);
+}
+
+.product-card:hover .card-bottle {
+  transform: translateY(-6px) scale(1.06);
+}
+
+/* Text area below the visual */
+.card-content {
+  padding: 22px 24px 24px;
+}
+
+.card-type {
+  font-size:      11px;
+  font-weight:    600;
+  color:          var(--blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom:  6px;
+}
+
+.card-name {
+  font-size:    20px;
+  font-weight:  600;
+  margin-bottom: 8px;
+  line-height:  1.25;
+}
+
+.card-desc {
+  font-size:     14px;
+  color:         var(--text-3);
+  line-height:   1.55;
+  margin-bottom: 16px;
+}
+
+/* "Learn more ›" link */
+.card-link {
+  display:     inline-flex;
+  align-items: center;
+  font-size:   14px;
+  font-weight: 500;
+  color:       var(--blue);
+}
+
+.card-link::after {
+  content:    ' ›';
+  font-size:  18px;
+  transition: transform 0.2s;
+}
+
+.product-card:hover .card-link::after {
+  transform: translateX(4px);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   6. ABOUT / FEATURES
+   ═══════════════════════════════════════════════════════════════ */
+.about-section {
+  position:   relative;
+  z-index:    1;
+  padding:    100px 24px;
+  text-align: center;
+  background: linear-gradient(to bottom, var(--bg), #050a10, var(--bg));
+}
+
+.about-inner {
+  max-width: 740px;
+  margin:    0 auto;
+}
+
+.about-section h2 {
+  font-size:      clamp(26px, 4.5vw, 48px);
+  font-weight:    700;
+  letter-spacing: -0.015em;
+  margin-bottom:  24px;
+}
+
+.about-section p {
+  font-size:   19px;
+  color:       var(--text-3);
+  line-height: 1.65;
+}
+
+/* Three-column feature cards */
+.features-grid {
+  display:               grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap:                   28px;
+  max-width:             900px;
+  margin:                60px auto 0;
+}
+
+.feature-card {
+  background:    var(--surface-2);
+  border:        1px solid var(--border);
+  border-radius: var(--radius);
+  padding:       28px 22px;
+  text-align:    center;
+}
+
+.feature-icon {
+  font-size:     32px;
+  margin-bottom: 14px;
+}
+
+.feature-title {
+  font-size:     15px;
+  font-weight:   600;
+  margin-bottom: 8px;
+}
+
+.feature-text {
+  font-size:  13px;
+  color:      var(--text-3);
+  line-height: 1.55;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   7. FOOTER
+   ═══════════════════════════════════════════════════════════════ */
+footer {
+  position:   relative;
+  z-index:    1;
+  padding:    22px 24px;
+  border-top: 1px solid var(--border);
+  text-align: center;
+  font-size:  13px;
+  color:      var(--text-3);
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   8. DETAIL PAGE
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Top hero area with product visual + info side by side */
+.detail-hero {
+  position:   relative;
+  z-index:    1;
+  padding:    calc(var(--nav-height) + 60px) 24px 60px;
+  max-width:  var(--max-width);
+  margin:     0 auto;
+}
+
+/* Two-column: visual on left, info on right */
+.detail-grid {
+  display:               grid;
+  grid-template-columns: 1fr 1fr;
+  gap:                   64px;
+  align-items:           start;
+}
+
+/* Gradient visual panel */
+.detail-visual {
+  border-radius: var(--radius);
+  min-height:    420px;
+  display:       flex;
+  align-items:   center;
+  justify-content: center;
+  overflow:      hidden;
+  position:      sticky;
+  top:           calc(var(--nav-height) + 24px);
+}
+
+.detail-visual svg {
+  filter: drop-shadow(0 12px 32px rgba(0, 0, 0, 0.6));
+}
+
+/* Info panel */
+.detail-info {
+  padding-top: 8px;
+}
+
+.detail-back {
+  display:      inline-flex;
+  align-items:  center;
+  font-size:    15px;
+  font-weight:  500;
+  color:        var(--blue);
+  margin-bottom: 32px;
+  transition:   opacity 0.2s;
+}
+
+.detail-back:hover { opacity: 0.75; }
+
+.detail-type {
+  font-size:      12px;
+  font-weight:    600;
+  color:          var(--blue);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom:  10px;
+}
+
+.detail-info h1 {
+  font-size:      clamp(32px, 5vw, 54px);
+  font-weight:    700;
+  letter-spacing: -0.02em;
+  margin-bottom:  12px;
+  line-height:    1.08;
+}
+
+.detail-full-desc {
+  font-size:     17px;
+  color:         var(--text-2);
+  line-height:   1.65;
+  margin-bottom: 32px;
+}
+
+/* Price display */
+.detail-price-label {
+  font-size:      11px;
+  font-weight:    600;
+  color:          var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom:  4px;
+}
+
+.detail-price {
+  font-size:     34px;
+  font-weight:   600;
+  margin-bottom: 32px;
+  color:         var(--text-1);
+}
+
+/* CTA buttons row */
+.detail-actions {
+  display:   flex;
+  gap:       12px;
+  flex-wrap: wrap;
+}
+
+/* Info pills row (TDS / pH / source) */
+.detail-meta {
+  display:    flex;
+  gap:        16px;
+  flex-wrap:  wrap;
+  margin-top: 28px;
+}
+
+.meta-pill {
+  background:    var(--surface-2);
+  border:        1px solid var(--border);
+  border-radius: var(--radius-sm);
+  padding:       10px 16px;
+  flex:          1 1 auto;
+  min-width:     110px;
+}
+
+.meta-label {
+  font-size:      10px;
+  font-weight:    600;
+  color:          var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin-bottom:  4px;
+}
+
+.meta-value {
+  font-size:  18px;
+  font-weight: 600;
+  color:       var(--text-1);
+}
+
+/* Mineral composition section */
+.detail-section {
+  position:  relative;
+  z-index:   1;
+  padding:   0 24px 80px;
+  max-width: var(--max-width);
+  margin:    0 auto;
+}
+
+.detail-section h2 {
+  font-size:      26px;
+  font-weight:    600;
+  letter-spacing: -0.01em;
+  margin-bottom:  20px;
+}
+
+/* Mineral table */
+.mineral-table {
+  width:           100%;
+  border-collapse: collapse;
+}
+
+.mineral-table th,
+.mineral-table td {
+  padding:       14px 16px;
+  text-align:    left;
+  border-bottom: 1px solid var(--border);
+  font-size:     15px;
+}
+
+.mineral-table thead th {
+  font-size:      11px;
+  font-weight:    600;
+  color:          var(--text-3);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.mineral-table td:last-child {
+  text-align: right;
+  font-weight: 500;
+  color:       #74b9ff;
+  font-variant-numeric: tabular-nums;
+}
+
+.mineral-table tr:last-child td,
+.mineral-table tr:last-child th {
+  border-bottom: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════
+   9. SCROLL-REVEAL ANIMATIONS
+   ═══════════════════════════════════════════════════════════════ */
+.fade-in {
+  opacity:    0;
+  transform:  translateY(28px);
+  transition: opacity 0.75s ease, transform 0.75s ease;
+}
+
+.fade-in.visible {
+  opacity:   1;
+  transform: translateY(0);
+}
+
+/* Stagger cards by index */
+.product-card:nth-child(1) { transition-delay: 0.05s; }
+.product-card:nth-child(2) { transition-delay: 0.15s; }
+.product-card:nth-child(3) { transition-delay: 0.25s; }
+
+/* ═══════════════════════════════════════════════════════════════
+   10. RESPONSIVE BREAKPOINTS
+   ═══════════════════════════════════════════════════════════════ */
+
+/* Tablet */
+@media (max-width: 900px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+    gap:                   40px;
+  }
+
+  .detail-visual {
+    position:   static;
+    min-height: 300px;
+  }
+}
+
+/* Mobile */
+@media (max-width: 640px) {
+  .nav-links  { display: none; }   /* hide nav links on mobile */
+
+  .navbar {
+    padding: 0 16px;
+  }
+
+  .lang-btn {
+    padding: 2px 7px;
+    font-size: 11px;
+  }
+
+  #product-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .features-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero h1 {
+    font-size: clamp(30px, 10vw, 44px);
+  }
+
+  .detail-actions {
+    flex-direction: column;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    text-align: center;
+  }
+
+  .detail-meta {
+    gap: 10px;
+  }
+}
+
+/* Very small screens */
+@media (max-width: 380px) {
+  .lang-switcher { gap: 2px; }
+  .lang-btn      { padding: 2px 5px; font-size: 10px; }
+}
